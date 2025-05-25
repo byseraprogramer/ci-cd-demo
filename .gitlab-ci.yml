@@ -1,0 +1,19 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+stages:
+  - build
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+build_and_push:
+  stage: build
+  script:
+    - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN"
+    - docker build -t "$DOCKERHUB_USERNAME/ci-cd-demo:latest" .
+    - docker push "$DOCKERHUB_USERNAME/ci-cd-demo:latest"
+  only:
+    - main
